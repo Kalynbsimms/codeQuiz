@@ -190,7 +190,7 @@ document.getElementById('startQuiz').addEventListener('click', () => {
     newQuestion()
 })
 
-document.getElementById('answerSection').addEventListener('click', event => {
+document.addEventListener('click', event => {
 
     if (event.target.classList.contains('answer')) { //if any answer is clicked on
         grabAnswer(event.target.dataset.answers) // go run the getAnswer() function and tell it to 
