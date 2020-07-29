@@ -3,31 +3,17 @@
 //         //  amount of secounds to start
 //     let count = 90
 
-//     // Interval for timer,decreasing by 1 every second
-//         let myInterval = setInterval(() => {
-//         // Decrease count by 1
-//         count--
-//             // displays remaing time on the screen
-//             document.getElementById('count').textContent = count
-
-//             // when the timer is out of time, alert will appear on screen
-//             if (count <= 0) {
-//         alert('Oh Snaps! Time is up')
-//                 // Stops the interval from running passed 0
-//                 clearInterval(myInterval)
-//             }
-//         }, 1000)
-
+//    
 // </script>
 
 // let score =0
 // let count=90
-
+// console.log(questions[0].answers[2])
 
 let questions = [
     {
         "question": "What is used to specify a style for a single,unique element?",
-        "correct_answer": "IDs",
+        "correct_answer": 'a. Ids',
         "answers": [
             'a. Ids',
             'b.Classes',
@@ -38,7 +24,7 @@ let questions = [
     },
     {
         'question': 'What is used to specify a style for a group of elements',
-        'correct_answer': 'Classes',
+        'correct_answer': 'b.Classes',
         'answers': [
             'a. Ids',
             'b.Classes',
@@ -48,7 +34,7 @@ let questions = [
     },
     {
         'question': 'What are "self-contained" modules of code that accomplish a specific task?',
-        'correct_answer': 'Functions',
+        'correct_answer': 'd. Functions',
         'answers': [
             'a. Ids',
             'b.Classes',
@@ -61,19 +47,19 @@ let questions = [
 
 let currentIndex = 0
 let score = 0
-let seconds = 90
-// What is the let timer variable equaled to?
+let count = 90
 let timer
 
 
+
 const newQuestion = () => {
-    document.getElementById('questions').textContent = questions[currentIndex].question
+    document.getElementById('questionSection').textContent = questions[currentIndex].question
 
     let answers = questions[currentIndex].answers
     // This cleats out whatis intially in the id=anset
-    document.getElementById('answers').innerHTML = ''
+    document.getElementById('answerSection').innerHTML = ''
 
-    for (let index = 0; index < answers.length; index++) {
+    for (let i = 0; i < answers.length; i++) {
         let answerElement = document.createElement('button')
         answerElement.className = 'answer btn btn-secondary btn-lg'
 
@@ -81,35 +67,63 @@ const newQuestion = () => {
 
         answerElement.textContent = answers[i]
 
-        document.getElementById('answers').append(answerElement)
+        document.getElementById('answerSection').append(answerElement)
 
     }
 }
 
 const grabAnswer = answer => {
+
+    if (count === 90) {
+
+
+        //  Interval for timer,decreasing by 1 every second
+        let myInterval = setInterval(() => {
+            // Decrease count by 1
+            count--
+            // displays remaing time on the screen
+            document.getElementById('time').textContent = count
+
+            // when the timer is out of time, alert will appear on screen
+            if (count <= 0) {
+                alert('Oh Snaps! Time is up')
+                // Stops the interval from running passed 0
+                clearInterval(myInterval)
+            }
+        }, 1000)
+    }
     if (answer === questions[currentIndex].correct_answer) {
         score++
         document.getElementById('score').textContent = score
-        let resultElement = document.getElementById('div')
+        let resultElement = document.createElement('div')
         resultElement.className = 'alert alert-success'
         resultElement.textContent = 'Correct Answer'
-        document.getElementById('answers').append(resultElement)
+        document.getElementById('answerSection').append(resultElement)
     } else {
+        console.log('score')
         let resultElement = document.createElement('div')
         resultElement.className = 'alert  alert-danger'
         resultElement.textContent = 'Incorrect Answer'
-        document.getElementById('answers').append(resultElement)
+        document.getElementById('answerSection').append(resultElement)
+        count = count - 10
     }
 
     currentIndex++
 
-    setInterval(() => {
+
+    let gameOverInterval = setInterval(() => {
         if (currentIndex < questions.length) {
             newQuestion()
         } else {
             endGame()
+            clearInterval(gameOverInterval)
         }
+
     }, 1000)
+
+
+
+
 
 }
 
@@ -122,7 +136,7 @@ const endGame = () => {
   <form>
     <div class="form-group">
       <label for="username">username</label>
-      <input type="text" class="form-control" id="username">
+      <input type="text" class="form-control" id="username"/>
       <button id="submitScore" class="btn btn-primary">Submit</button>
     </div>
   </form>
@@ -176,9 +190,10 @@ document.getElementById('startQuiz').addEventListener('click', () => {
     newQuestion()
 })
 
-document.addEventListener('click', event => {
+document.getElementById('answerSection').addEventListener('click', event => {
+
     if (event.target.classList.contains('answer')) { //if any answer is clicked on
-        getAnswer(event.target.dataset.answer) // go run the getAnswer() function and tell it to 
+        grabAnswer(event.target.dataset.answers) // go run the getAnswer() function and tell it to 
     } else if (event.target.id === 'submitScore') {
         event.preventDefault()
         submitScore({
